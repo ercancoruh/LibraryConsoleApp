@@ -6,6 +6,14 @@ MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "LibraryConsoleApp", "LibraryConsoleApp\LibraryConsoleApp.vcxproj", "{FAD43E5E-E407-4CCC-8B7C-20E1B58C2F25}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Çözüm Öğeleri", "Çözüm Öğeleri", "{17E4F73B-3580-4A45-B28C-114AD4BC1AE7}"
+	ProjectSection(SolutionItems) = preProject
+		LibraryConsoleApp\datas\01_adminusers_usernames.txt = LibraryConsoleApp\datas\01_adminusers_usernames.txt
+		LibraryConsoleApp\datas\02_adminusers_passwords.txt = LibraryConsoleApp\datas\02_adminusers_passwords.txt
+		LibraryConsoleApp\datas\03_users_usernames.txt = LibraryConsoleApp\datas\03_users_usernames.txt
+		LibraryConsoleApp\datas\04_users_passwords.txt = LibraryConsoleApp\datas\04_users_passwords.txt
+		LibraryConsoleApp\datas\05_books.txt = LibraryConsoleApp\datas\05_books.txt
+		LibraryConsoleApp\datas\06_not_avaible_books.txt = LibraryConsoleApp\datas\06_not_avaible_books.txt
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
