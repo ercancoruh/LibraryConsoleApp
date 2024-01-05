@@ -130,7 +130,8 @@ void bookPicker(string booksData[], int lastIndex, bool notAvaibleBooksData[], i
     setlocale(LC_ALL, "Turkish");
     SetConsoleTextAttribute(hConsole, 14);
 
-    cout << "Almak istediğiniz kitabın numarasını giriniz." << endl;
+    cout << endl;
+    cout << "Almak istediğiniz kitabın numarasını giriniz: ";
     bool stoiError = false;
     int choiceTest;
     string choice;
