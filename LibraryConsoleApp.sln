@@ -13,6 +13,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Çözüm Öğeleri", "Çöz
 		LibraryConsoleApp\datas\04_users_passwords.txt = LibraryConsoleApp\datas\04_users_passwords.txt
 		LibraryConsoleApp\datas\05_books.txt = LibraryConsoleApp\datas\05_books.txt
 		LibraryConsoleApp\datas\06_not_avaible_books.txt = LibraryConsoleApp\datas\06_not_avaible_books.txt
+		README.md = README.md
 	EndProjectSection
 EndProject
 Global
