@@ -138,14 +138,23 @@ void writingDatas(
     }
 }
 
-void registerUser(string userUsernames[], int& userUsernamesIndex, string userPasswords[], int& userPasswordsIndex) {
+void registerUser(string usernameDatas[], int& usernameDatasIndex, string passwordDatas[], int& passwordDatasIndex, int maksElement) {
+
+    if (usernameDatasIndex >= maksElement) {
+        SetConsoleTextAttribute(hConsole, 12);
+        cout << "\nMaksimum kullanıcı sayısına ulaşıldı.";
+        SetConsoleTextAttribute(hConsole, 14);
+        Sleep(2000);
+        return;
+    }
+
     string username;
     string password;
     cout << "Bir kullanıcı adı giriniz: ";
     cin >> username;
 
-    for (int i = 0; i < userUsernamesIndex; i++) {
-        if (username == userUsernames[i]) {
+    for (int i = 0; i < usernameDatasIndex; i++) {
+        if (username == usernameDatas[i]) {
             SetConsoleTextAttribute(hConsole, 12);
             cout << "\nBu kullanıcı zaten mevcut\nLütfen başka bir kullanıcı adı seçiniz.";
             SetConsoleTextAttribute(hConsole, 14);
@@ -158,11 +167,11 @@ void registerUser(string userUsernames[], int& userUsernamesIndex, string userPa
     cout << "Bir şifre giriniz:         ";
     cin >> password;
 
-    userUsernames[userUsernamesIndex] = username;
-    userUsernamesIndex++;
+    usernameDatas[usernameDatasIndex] = username;
+    usernameDatasIndex++;
 
-    userPasswords[userPasswordsIndex] = password;
-    userPasswordsIndex++;
+    passwordDatas[passwordDatasIndex] = password;
+    passwordDatasIndex++;
 
     SetConsoleTextAttribute(hConsole, 10);
     cout << "KAYIT BAŞARILI" << endl;
@@ -196,21 +205,10 @@ bool loginUser(string usernameData[], string passwordData[]) {
     return false;
 }
 
-void bookLister(string booksData[], int lastIndex) {
-    SetConsoleTextAttribute(hConsole, 9);
-    for (int i = 0; i < lastIndex; i++) {
-        cout << i + 1 << ". " << booksData[i] << endl;
-    }
-    SetConsoleTextAttribute(hConsole, 14);
-    cout << endl;
-    cout << "Geri gitmek için herhangi bir tuşa basınız." << endl;
-    char a = _getch();
-}
-
 void bookPicker(string booksData[], int lastIndex, bool notAvaibleBooksData[], int lastIndex2) {
     SetConsoleTextAttribute(hConsole, 9);
     for (int i = 0; i < lastIndex; i++) {
-        cout << i + 1 << ". " << booksData[i] << endl;
+        cout << i + 1 << ") " << booksData[i] << endl;
     }
     SetConsoleTextAttribute(hConsole, 14);
 
@@ -256,26 +254,65 @@ void bookPicker(string booksData[], int lastIndex, bool notAvaibleBooksData[], i
     return;
 }
 
+void dataLister(string datas[], int datasIndex) {
+    setlocale(LC_ALL, "C");
+    SetConsoleTextAttribute(hConsole, 9);
+    for (int i = 0; i < datasIndex; i++) {
+        cout << i + 1 << ") " << datas[i] << endl;
+    }
+    SetConsoleTextAttribute(hConsole, 14);
+    cout << endl;
+    setlocale(LC_ALL, "Turkish");
+    cout << "Geri gitmek için herhangi bir tuşa basınız." << endl;
+    char a = _getch();
+}
+
+void addBook(string bookDatas[], int& bookDatasIndex, int maksElement) {
+
+    if (bookDatasIndex >= maksElement) {
+        SetConsoleTextAttribute(hConsole, 12);
+        cout << "\nMaksimum kitap sayısına ulaşıldı.";
+        SetConsoleTextAttribute(hConsole, 14);
+        Sleep(2000);
+        return;
+    }
+
+    string bookName;
+    cout << "Yeni kitabın Adını Giriniz: ";
+    getline(cin >> ws, bookName);
+
+    bookDatas[bookDatasIndex] = bookName;
+    bookDatasIndex++;
+
+    SetConsoleTextAttribute(hConsole, 10);
+    cout << "KAYIT BAŞARILI" << endl;
+    SetConsoleTextAttribute(hConsole, 14);
+    Sleep(2000);
+    return;
+}
+
 int main() {
 
     SetConsoleTextAttribute(hConsole, 14);
 
-    string adminUsernames[50];
+    const int maksElement = 12;
+
+    string adminUsernames[maksElement];
     int adminUsernamesIndex = 0;
 
-    string adminPasswords[50];
+    string adminPasswords[maksElement];
     int adminPasswordsIndex = 0;
 
-    string userUsernames[50];
+    string userUsernames[maksElement];
     int userUsernamesIndex = 0;
 
-    string userPasswords[50];
+    string userPasswords[maksElement];
     int userPasswordsIndex = 0;
 
-    string books[50];
+    string books[maksElement];
     int booksIndex = 0;
 
-    bool notAvaibleBooks[50];
+    bool notAvaibleBooks[maksElement];
     int notAvaibleBooksIndex = 0;
 
     readingDatas(
@@ -325,7 +362,8 @@ int main() {
                 userUsernames,
                 userUsernamesIndex,
                 userPasswords,
-                userPasswordsIndex
+                userPasswordsIndex,
+                maksElement
             );
 
             writingDatas(
@@ -362,7 +400,7 @@ int main() {
                     cout << "#                                         #" << endl;
                     cout << "# # # # # # # # # # # # # # # # # # # # # #" << endl;
                     cout << "#                                         #" << endl;
-                    cout << "#   Programdan çıkmak için 0 giriniz.     #" << endl;
+                    cout << "#   Geri gitmek için 0 giriniz.           #" << endl;
                     cout << "#                                         #" << endl;
                     cout << "# # # # # # # # # # # # # # # # # # # # # #" << endl;
 
@@ -371,7 +409,7 @@ int main() {
                     loginMenuChoice = _getch();
 
                     if (loginMenuChoice == "1") {
-                        bookLister(books, booksIndex);
+                        dataLister(books, booksIndex);
                     }
 
                     if (loginMenuChoice == "2") {
@@ -382,9 +420,98 @@ int main() {
         }
 
         else if (mainMenuChoice == "3") {
+            if (loginUser(adminUsernames, adminPasswords)) {
+
+                string adminMenuChoice = "default";
+                while (adminMenuChoice != "0") {
+
+                    system("cls");
+                    cout << "# # # # # # # # # # # # # # # # # # # # # #" << endl;
+                    cout << "#                                         #" << endl;
+                    cout << "#   Y Ö N E T İ C İ   M E N Ü S Ü         #" << endl;
+                    cout << "#                                         #" << endl;
+                    cout << "# # # # # # # # # # # # # # # # # # # # # #" << endl;
+                    cout << "#                                         #" << endl;
+                    cout << "#   1. Kitap Listesi                      #" << endl;
+                    cout << "#   2. Yönetici Ekle                      #" << endl;
+                    cout << "#   3. Kullanıcı Listesi                  #" << endl;
+                    cout << "#   4. Yönetici Listesi                   #" << endl;
+                    cout << "#   5. Yeni Kitap Ekle                    #" << endl;
+                    cout << "#                                         #" << endl;
+                    cout << "# # # # # # # # # # # # # # # # # # # # # #" << endl;
+                    cout << "#                                         #" << endl;
+                    cout << "#   Geri gitmek için 0 giriniz.           #" << endl;
+                    cout << "#                                         #" << endl;
+                    cout << "# # # # # # # # # # # # # # # # # # # # # #" << endl;
+
+
+                    cout << endl;
+                    adminMenuChoice = _getch();
+
+                    if (adminMenuChoice == "1") {
+                        dataLister(books, booksIndex);
+                    }
+
+                    else if (adminMenuChoice == "2") {
+                        registerUser(
+                            adminUsernames,
+                            adminUsernamesIndex,
+                            adminPasswords,
+                            adminPasswordsIndex,
+                            maksElement
+                        );
+
+                        writingDatas(
+                            adminUsernames,
+                            adminUsernamesIndex,
+                            adminPasswords,
+                            adminPasswordsIndex,
+                            userUsernames,
+                            userUsernamesIndex,
+                            userPasswords,
+                            userPasswordsIndex,
+                            books,
+                            booksIndex,
+                            notAvaibleBooks,
+                            notAvaibleBooksIndex
+                        );
+                    }
+
+                    else if (adminMenuChoice == "3") {
+                        dataLister(userUsernames, userUsernamesIndex);
+                    }
+
+                    else if (adminMenuChoice == "4") {
+                        dataLister(adminUsernames, adminUsernamesIndex);
+                    }
+
+                    else if (adminMenuChoice == "5") {
+                        addBook(books, booksIndex, maksElement);
+
+                        writingDatas(
+                            adminUsernames,
+                            adminUsernamesIndex,
+                            adminPasswords,
+                            adminPasswordsIndex,
+                            userUsernames,
+                            userUsernamesIndex,
+                            userPasswords,
+                            userPasswordsIndex,
+                            books,
+                            booksIndex,
+                            notAvaibleBooks,
+                            notAvaibleBooksIndex
+                        );
+                    }
+                }
+            }
         }
 
         else if (mainMenuChoice == "4") {
+            dataLister(books, booksIndex);
+        }
+
+        else if (mainMenuChoice == "5") {
         }
     }
 
