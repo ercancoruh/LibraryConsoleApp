@@ -81,6 +81,95 @@ void readingDatas(
     }
 }
 
+void writingDatas(
+    string adminUsernames[],
+    int& adminUsernamesIndex,
+    string adminPasswords[],
+    int& adminPasswordsIndex,
+    string userUsernames[],
+    int& userUsernamesIndex,
+    string userPasswords[],
+    int& userPasswordsIndex,
+    string books[],
+    int& booksIndex,
+    bool notAvaibleBooks[],
+    int& notAvaibleBooksIndex
+)
+
+{
+    string line;
+
+    ofstream adminUsernamesFile;
+    ofstream adminPasswordsFile;
+    ofstream userUsernamesFile;
+    ofstream userPasswordsFile;
+    ofstream booksFile;
+    ofstream notAvaibleBooksFile;
+
+    adminUsernamesFile.open("datas\\01_adminusers_usernames.txt");
+    adminPasswordsFile.open("datas\\02_adminusers_passwords.txt");
+    userUsernamesFile.open("datas\\03_users_usernames.txt");
+    userPasswordsFile.open("datas\\04_users_passwords.txt");
+    booksFile.open("datas\\05_books.txt");
+    notAvaibleBooksFile.open("datas\\06_not_avaible_books.txt");
+
+    for (int i = 0; i < adminUsernamesIndex; i++) {
+        adminUsernamesFile << adminUsernames[i] << endl;
+    }
+
+    for (int i = 0; i < adminPasswordsIndex; i++) {
+        adminPasswordsFile << adminPasswords[i] << endl;
+    }
+
+    for (int i = 0; i < userUsernamesIndex; i++) {
+        userUsernamesFile << userUsernames[i] << endl;
+    }
+
+    for (int i = 0; i < userPasswordsIndex; i++) {
+        userPasswordsFile << userPasswords[i] << endl;
+    }
+
+    for (int i = 0; i < booksIndex; i++) {
+        booksFile << books[i] << endl;
+    }
+
+    for (int i = 0; i < notAvaibleBooksIndex; i++) {
+        notAvaibleBooksFile << notAvaibleBooks[i] << endl;
+    }
+}
+
+void registerUser(string userUsernames[], int& userUsernamesIndex, string userPasswords[], int& userPasswordsIndex) {
+    string username;
+    string password;
+    cout << "Bir kullanıcı adı giriniz: ";
+    cin >> username;
+
+    for (int i = 0; i < userUsernamesIndex; i++) {
+        if (username == userUsernames[i]) {
+            SetConsoleTextAttribute(hConsole, 12);
+            cout << "\nBu kullanıcı zaten mevcut\nLütfen başka bir kullanıcı adı seçiniz.";
+            SetConsoleTextAttribute(hConsole, 14);
+            Sleep(2000);
+            return;
+            break;
+        }
+    }
+
+    cout << "Bir şifre giriniz:         ";
+    cin >> password;
+
+    userUsernames[userUsernamesIndex] = username;
+    userUsernamesIndex++;
+
+    userPasswords[userPasswordsIndex] = password;
+    userPasswordsIndex++;
+
+    SetConsoleTextAttribute(hConsole, 10);
+    cout << "KAYIT BAŞARILI" << endl;
+    SetConsoleTextAttribute(hConsole, 14);
+    Sleep(2000);
+}
+
 bool loginUser(string usernameData[], string passwordData[]) {
 
     string username;
@@ -95,26 +184,23 @@ bool loginUser(string usernameData[], string passwordData[]) {
             SetConsoleTextAttribute(hConsole, 10);
             cout << "GİRİŞ BAŞARILI" << endl;
             SetConsoleTextAttribute(hConsole, 14);
+            Sleep(2000);
             return true;
             break;
         }
-        else {
-            SetConsoleTextAttribute(hConsole, 12);
-            cout << "Kullanıcı Adı veya Şifre Yanlış" << endl;
-            SetConsoleTextAttribute(hConsole, 14);
-            return false;
-        }
     }
+    SetConsoleTextAttribute(hConsole, 12);
+    cout << "Kullanıcı Adı veya Şifre Yanlış" << endl;
+    SetConsoleTextAttribute(hConsole, 14);
+    Sleep(2000);
     return false;
 }
 
 void bookLister(string booksData[], int lastIndex) {
     SetConsoleTextAttribute(hConsole, 9);
-    locale::global(locale("tr_TR.UTF-8"));
     for (int i = 0; i < lastIndex; i++) {
         cout << i + 1 << ". " << booksData[i] << endl;
     }
-    setlocale(LC_ALL, "Turkish");
     SetConsoleTextAttribute(hConsole, 14);
     cout << endl;
     cout << "Geri gitmek için herhangi bir tuşa basınız." << endl;
@@ -123,11 +209,9 @@ void bookLister(string booksData[], int lastIndex) {
 
 void bookPicker(string booksData[], int lastIndex, bool notAvaibleBooksData[], int lastIndex2) {
     SetConsoleTextAttribute(hConsole, 9);
-    locale::global(locale("tr_TR.UTF-8"));
     for (int i = 0; i < lastIndex; i++) {
         cout << i + 1 << ". " << booksData[i] << endl;
     }
-    setlocale(LC_ALL, "Turkish");
     SetConsoleTextAttribute(hConsole, 14);
 
     cout << endl;
@@ -237,11 +321,31 @@ int main() {
         mainMenuChoice = _getch();
 
         if (mainMenuChoice == "1") {
+            registerUser(
+                userUsernames,
+                userUsernamesIndex,
+                userPasswords,
+                userPasswordsIndex
+            );
+
+            writingDatas(
+                adminUsernames,
+                adminUsernamesIndex,
+                adminPasswords,
+                adminPasswordsIndex,
+                userUsernames,
+                userUsernamesIndex,
+                userPasswords,
+                userPasswordsIndex,
+                books,
+                booksIndex,
+                notAvaibleBooks,
+                notAvaibleBooksIndex
+            );
         }
 
         else if (mainMenuChoice == "2") {
             if (loginUser(userUsernames, userPasswords)) {
-                Sleep(1500);
 
                 string loginMenuChoice = "default";
                 while (loginMenuChoice != "0") {
