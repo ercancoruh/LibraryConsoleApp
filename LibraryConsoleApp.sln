@@ -7,12 +7,13 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "LibraryConsoleApp", "Librar
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Çözüm Öğeleri", "Çözüm Öğeleri", "{17E4F73B-3580-4A45-B28C-114AD4BC1AE7}"
 	ProjectSection(SolutionItems) = preProject
-		LibraryConsoleApp\datas\01_adminusers_usernames.txt = LibraryConsoleApp\datas\01_adminusers_usernames.txt
-		LibraryConsoleApp\datas\02_adminusers_passwords.txt = LibraryConsoleApp\datas\02_adminusers_passwords.txt
-		LibraryConsoleApp\datas\03_users_usernames.txt = LibraryConsoleApp\datas\03_users_usernames.txt
-		LibraryConsoleApp\datas\04_users_passwords.txt = LibraryConsoleApp\datas\04_users_passwords.txt
-		LibraryConsoleApp\datas\05_books.txt = LibraryConsoleApp\datas\05_books.txt
-		LibraryConsoleApp\datas\06_not_avaible_books.txt = LibraryConsoleApp\datas\06_not_avaible_books.txt
+		LibraryConsoleApp\datas\01_adminusers_usernames = LibraryConsoleApp\datas\01_adminusers_usernames
+		LibraryConsoleApp\datas\02_adminusers_passwords = LibraryConsoleApp\datas\02_adminusers_passwords
+		LibraryConsoleApp\datas\03_users_usernames = LibraryConsoleApp\datas\03_users_usernames
+		LibraryConsoleApp\datas\04_users_passwords = LibraryConsoleApp\datas\04_users_passwords
+		LibraryConsoleApp\datas\05_books = LibraryConsoleApp\datas\05_books
+		LibraryConsoleApp\datas\06_not_avaible_books = LibraryConsoleApp\datas\06_not_avaible_books
+		LibraryConsoleApp\datas\07_book_users = LibraryConsoleApp\datas\07_book_users
 		README.md = README.md
 	EndProjectSection
 EndProject
