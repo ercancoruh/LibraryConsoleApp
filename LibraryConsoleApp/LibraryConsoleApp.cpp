@@ -23,7 +23,16 @@ bool checker() {
     cout << endl << "Evet = 1\nHayır = 0" << endl;
     checker = _getch();
     if (checker == "1") {
+        SetConsoleTextAttribute(hConsole, 10);
+        cout << "Devam ediliyor." << endl;
+        SetConsoleTextAttribute(hConsole, 14);
         return true;
+    }
+    else if (checker == "0") {
+        SetConsoleTextAttribute(hConsole, 12);
+        cout << "İşlem iptal edildi." << endl;
+        SetConsoleTextAttribute(hConsole, 14);
+        return false;
     }
     SetConsoleTextAttribute(hConsole, 12);
     cout << "Lütfen geçerli bir değer giriniz." << endl;
@@ -43,7 +52,9 @@ void readingDatas(
     string books[],
     int& booksIndex,
     bool notAvaibleBooks[],
-    int& notAvaibleBooksIndex
+    int& notAvaibleBooksIndex,
+    string bookUsers[],
+    int& bookUsersIndex
 ) 
 
 {
@@ -55,6 +66,7 @@ void readingDatas(
     ifstream userPasswordsFile;
     ifstream booksFile;
     ifstream notAvaibleBooksFile;
+    ifstream bookUsersFile;
 
     adminUsernamesFile.open("datas\\01_adminusers_usernames");
     adminPasswordsFile.open("datas\\02_adminusers_passwords");
@@ -62,6 +74,7 @@ void readingDatas(
     userPasswordsFile.open("datas\\04_users_passwords");
     booksFile.open("datas\\05_books");
     notAvaibleBooksFile.open("datas\\06_not_avaible_books");
+    bookUsersFile.open("datas\\07_book_users");
 
     while (getline(adminUsernamesFile, line)) {
         adminUsernames[adminUsernamesIndex] = line;
@@ -92,6 +105,11 @@ void readingDatas(
         notAvaibleBooks[notAvaibleBooksIndex] = to_bool(line);
         notAvaibleBooksIndex++;
     }
+
+    while (getline(bookUsersFile, line)) {
+        bookUsers[bookUsersIndex] = line;
+        bookUsersIndex++;
+    }
 }
 
 void writingDatas(
@@ -106,7 +124,9 @@ void writingDatas(
     string books[],
     int& booksIndex,
     bool notAvaibleBooks[],
-    int& notAvaibleBooksIndex
+    int& notAvaibleBooksIndex,
+    string bookUsers[],
+    int& bookUsersIndex
 )
 
 {
@@ -118,6 +138,7 @@ void writingDatas(
     ofstream userPasswordsFile;
     ofstream booksFile;
     ofstream notAvaibleBooksFile;
+    ofstream bookUsersFile;
 
     adminUsernamesFile.open("datas\\01_adminusers_usernames");
     adminPasswordsFile.open("datas\\02_adminusers_passwords");
@@ -125,6 +146,7 @@ void writingDatas(
     userPasswordsFile.open("datas\\04_users_passwords");
     booksFile.open("datas\\05_books");
     notAvaibleBooksFile.open("datas\\06_not_avaible_books");
+    bookUsersFile.open("datas\\07_book_users");
 
     for (int i = 0; i < adminUsernamesIndex; i++) {
         adminUsernamesFile << adminUsernames[i] << endl;
@@ -148,6 +170,10 @@ void writingDatas(
 
     for (int i = 0; i < notAvaibleBooksIndex; i++) {
         notAvaibleBooksFile << notAvaibleBooks[i] << endl;
+    }
+
+    for (int i = 0; i < bookUsersIndex; i++) {
+        bookUsersFile << bookUsers[i] << endl;
     }
 }
 
@@ -206,9 +232,10 @@ void registerUser(string usernameDatas[], int& usernameDatasIndex, string passwo
     cout << "KAYIT BAŞARISIZ" << endl;
     SetConsoleTextAttribute(hConsole, 14);
     Sleep(2000);
+    return;
 }
 
-bool loginUser(string usernameData[], string passwordData[]) {
+bool loginUser(string usernameData[], string passwordData[], string& loggedUsername) {
 
     string username;
     cout << "Kullanıcı Adı: ";
@@ -222,6 +249,7 @@ bool loginUser(string usernameData[], string passwordData[]) {
             SetConsoleTextAttribute(hConsole, 10);
             cout << "GİRİŞ BAŞARILI" << endl;
             SetConsoleTextAttribute(hConsole, 14);
+            loggedUsername = usernameData[i];
             Sleep(2000);
             return true;
             break;
@@ -234,7 +262,18 @@ bool loginUser(string usernameData[], string passwordData[]) {
     return false;
 }
 
-void bookPicker(string booksData[], int lastIndex, bool notAvaibleBooksData[], int lastIndex2) {
+void bookPicker(string booksData[], int lastIndex, bool notAvaibleBooksData[], int lastIndex2, string loggedUsername, string bookUsersData[], int maksElement) {
+
+    for (int i = 0; i < maksElement; i++) {
+        if (bookUsersData[i] == loggedUsername) {
+            SetConsoleTextAttribute(hConsole, 12);
+            cout << "Zaten aldığınız bir kitap var.\nLütfen önce onu iade ediniz." << endl;
+            SetConsoleTextAttribute(hConsole, 14);
+            Sleep(2000);
+            return;
+        }
+    }
+
     setlocale(LC_ALL, "C");
     SetConsoleTextAttribute(hConsole, 9);
     for (int i = 0; i < lastIndex; i++) {
@@ -275,8 +314,24 @@ void bookPicker(string booksData[], int lastIndex, bool notAvaibleBooksData[], i
             cout << "\n" << booksData[stoi(choice) - 1];
             SetConsoleTextAttribute(hConsole, 14);
             setlocale(LC_ALL, "Turkish");
-            cout << " isimli kitap seçildi." << endl;
-            Sleep(3000);
+            cout << " isimli kitap seçildi.\Onaylıyor musunuz?" << endl;
+
+            if (checker()) {
+                bookUsersData[stoi(choice) - 1] = loggedUsername;
+                notAvaibleBooksData[stoi(choice) - 1] = 1;
+                SetConsoleTextAttribute(hConsole, 10);
+                cout << "KİTAP ALINDI" << endl;
+                SetConsoleTextAttribute(hConsole, 14);
+                Sleep(2000);
+                return;
+            }
+
+            SetConsoleTextAttribute(hConsole, 12);
+            cout << "KİTAP ALINAMADI" << endl;
+            SetConsoleTextAttribute(hConsole, 14);
+            Sleep(2000);
+            return;
+            Sleep(2000);
             return;
         }
     }
@@ -349,6 +404,9 @@ int main() {
     bool notAvaibleBooks[maksElement];
     int notAvaibleBooksIndex = 0;
 
+    string bookUsers[maksElement];
+    int bookUsersIndex = 0;
+
     readingDatas(
         adminUsernames,
         adminUsernamesIndex,
@@ -361,7 +419,9 @@ int main() {
         books,
         booksIndex,
         notAvaibleBooks,
-        notAvaibleBooksIndex
+        notAvaibleBooksIndex,
+        bookUsers,
+        bookUsersIndex
     );
 
     setlocale(LC_ALL, "Turkish");
@@ -412,12 +472,15 @@ int main() {
                 books,
                 booksIndex,
                 notAvaibleBooks,
-                notAvaibleBooksIndex
+                notAvaibleBooksIndex,
+                bookUsers,
+                bookUsersIndex
             );
         }
 
         else if (mainMenuChoice == "2") {
-            if (loginUser(userUsernames, userPasswords)) {
+            string loggedUsername = "";
+            if (loginUser(userUsernames, userPasswords, loggedUsername)) {
 
                 string loginMenuChoice = "default";
                 while (loginMenuChoice != "0") {
@@ -446,15 +509,37 @@ int main() {
                         dataLister(books, booksIndex);
                     }
 
-                    if (loginMenuChoice == "2") {
-                        bookPicker(books, booksIndex, notAvaibleBooks, notAvaibleBooksIndex);
+                    else if (loginMenuChoice == "2") {
+                        bookPicker(books, booksIndex, notAvaibleBooks, notAvaibleBooksIndex, loggedUsername, bookUsers, maksElement);
+
+                        writingDatas(
+                            adminUsernames,
+                            adminUsernamesIndex,
+                            adminPasswords,
+                            adminPasswordsIndex,
+                            userUsernames,
+                            userUsernamesIndex,
+                            userPasswords,
+                            userPasswordsIndex,
+                            books,
+                            booksIndex,
+                            notAvaibleBooks,
+                            notAvaibleBooksIndex,
+                            bookUsers,
+                            bookUsersIndex
+                        );
+                    }
+
+                    else if (loginMenuChoice == "0") {
+                        loggedUsername = "";
                     }
                 }
             }
         }
 
         else if (mainMenuChoice == "3") {
-            if (loginUser(adminUsernames, adminPasswords)) {
+            string loggedUsername = "";
+            if (loginUser(adminUsernames, adminPasswords, loggedUsername)) {
 
                 string adminMenuChoice = "default";
                 while (adminMenuChoice != "0") {
@@ -507,7 +592,9 @@ int main() {
                             books,
                             booksIndex,
                             notAvaibleBooks,
-                            notAvaibleBooksIndex
+                            notAvaibleBooksIndex,
+                            bookUsers,
+                            bookUsersIndex
                         );
                     }
 
@@ -534,8 +621,14 @@ int main() {
                             books,
                             booksIndex,
                             notAvaibleBooks,
-                            notAvaibleBooksIndex
+                            notAvaibleBooksIndex,
+                            bookUsers,
+                            bookUsersIndex
                         );
+                    }
+
+                    else if (adminMenuChoice == "0") {
+                        loggedUsername = "";
                     }
                 }
             }
