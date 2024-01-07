@@ -295,7 +295,7 @@ int main() {
 
     SetConsoleTextAttribute(hConsole, 14);
 
-    const int maksElement = 12;
+    const int maksElement = 100;
 
     string adminUsernames[maksElement];
     int adminUsernamesIndex = 0;
